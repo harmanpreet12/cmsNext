@@ -3,7 +3,19 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 
-export const authOptions: NextAuthOptions = {
+// Define a type for the Axios error response
+type StrapiErrorResponse = {
+  response?: {
+    data?: {
+      error?: {
+        message?: string;
+      };
+    };
+  };
+};
+
+// Define auth options outside the export
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -20,7 +32,6 @@ export const authOptions: NextAuthOptions = {
               password: credentials?.password,
             }
           );
-
           if (res.data && res.data.jwt) {
             return {
               id: res.data.user.id,
@@ -30,8 +41,18 @@ export const authOptions: NextAuthOptions = {
             };
           }
           throw new Error("Invalid credentials");
-        } catch (error: any) {
-          const errorMsg = error.response?.data?.error?.message || "Authentication failed";
+        } catch (error: unknown) {
+          let errorMsg = "Authentication failed";
+          
+          if (typeof error === 'object' && error !== null && 'response' in error) {
+            const strapiError = error as StrapiErrorResponse;
+            if (strapiError.response?.data?.error?.message) {
+              errorMsg = strapiError.response.data.error.message;
+            }
+          } else if (error instanceof Error) {
+            errorMsg = error.message;
+          }
+          
           throw new Error(errorMsg);
         }
       },
@@ -62,5 +83,8 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
+// Create the handler using the authOptions
 const handler = NextAuth(authOptions);
+
+// Export the handler as GET and POST - these are the only valid exports for route handlers
 export { handler as GET, handler as POST };
