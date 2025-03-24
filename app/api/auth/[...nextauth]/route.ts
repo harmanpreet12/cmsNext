@@ -1,63 +1,47 @@
+
 import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 
-// Define a type for the Axios error response
-type StrapiErrorResponse = {
-  response?: {
-    data?: {
-      error?: {
-        message?: string;
-      };
-    };
-  };
-};
-
-// Define auth options outside the export
-const authOptions: NextAuthOptions = {
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
+        }
+
         try {
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/auth/local`,
-            {
-              identifier: credentials?.email,
-              password: credentials?.password,
-            }
-          );
-          if (res.data && res.data.jwt) {
+          const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "";
+          const res = await axios.post(`${strapiUrl}/api/auth/local`, {
+            identifier: credentials.email,
+            password: credentials.password,
+          });
+
+          if (res.data?.jwt && res.data?.user) {
             return {
               id: res.data.user.id,
-              name: res.data.user.username,
               email: res.data.user.email,
+              name: res.data.user.username,
               jwt: res.data.jwt,
             };
+          } else {
+            throw new Error("Invalid credentials");
           }
+        } catch (error) {
           throw new Error("Invalid credentials");
-        } catch (error: unknown) {
-          let errorMsg = "Authentication failed";
-          
-          if (typeof error === 'object' && error !== null && 'response' in error) {
-            const strapiError = error as StrapiErrorResponse;
-            if (strapiError.response?.data?.error?.message) {
-              errorMsg = strapiError.response.data.error.message;
-            }
-          } else if (error instanceof Error) {
-            errorMsg = error.message;
-          }
-          
-          throw new Error(errorMsg);
         }
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -74,17 +58,7 @@ const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  pages: {
-    signIn: "/",
-  },
-  session: {
-    strategy: "jwt",
-  },
   secret: process.env.NEXTAUTH_SECRET,
-};
+});
 
-// Create the handler using the authOptions
-const handler = NextAuth(authOptions);
-
-// Export the handler as GET and POST - these are the only valid exports for route handlers
 export { handler as GET, handler as POST };
