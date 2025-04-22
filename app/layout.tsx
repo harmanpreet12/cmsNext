@@ -1,9 +1,9 @@
 import './globals.css';
-import { Providers } from './providers';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Next.js Authentication with Strapi',
-  description: 'A simple authentication app using Next.js and Strapi',
+export const metadata: Metadata = {
+  title: 'My Navigation App',
+  description: 'A responsive navigation app built with Next.js and TypeScript',
 };
 
 export default function RootLayout({
@@ -13,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

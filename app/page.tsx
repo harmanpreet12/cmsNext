@@ -1,9 +1,13 @@
-import AuthForm from './components/AuthForm';
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100">
-      <AuthForm />
-    </main>
+    <>
+      <Navbar />
+      <main style={{ marginTop: '80px' }}>
+        <h1>Home Page</h1>
+        <p>Welcome to the Home page!</p>
+      </main>
+    </>
   );
 }

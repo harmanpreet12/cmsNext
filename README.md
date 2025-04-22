@@ -8,6 +8,8 @@ This project is a Next.js application that demonstrates user authentication and 
 -   Headless CMS using Strapi for content management.
 -   Dashboard page that displays the logged-in user's email.
 -   Protected routes (Dashboard redirects to home if not logged in).
+-   Responsive navigation bar (header) with mobile toggle, centered on the page.
+-   6-page routing system (Home, About, Services, Portfolio, Contact, and Login).
 
 ## Tech Stack
 
@@ -28,7 +30,13 @@ The project consists of two main parts: the Next.js frontend application (`nextj
   - `AuthButton.tsx`: Component for login/logout button.
   - `AuthForm.tsx`: Component for the login/signup form.
 - `providers.tsx`: Provides NextAuth session context to the app.
-
+- `about/page.tsx`: The About page.
+- `services/page.tsx`: The Services page.
+- `portfolio/page.tsx`: The Portfolio page.
+- `contact/page.tsx`: The Contact page.
+- `login/page.tsx:` The Login page with a form for sign-up and sign-in.
+- `components/`: Reusable UI components
+- `Navbar.tsx`: A responsive navigation bar component with links to all pages.
 ### Backend (Strapi CMS - `nextjs-app/cms`)
 - Standard Strapi project structure.
 - Configured to run as a separate service.
@@ -68,6 +76,8 @@ Make sure to populate the `.env` files in both `nextjs-app` and `nextjs-app/cms`
 -   **Authentication:** NextAuth.js is used for authentication. It's configured in `nextjs-app/app/api/auth/[...nextauth]/route.ts`.  The `AuthButton` and `AuthForm` components handle user interaction.
 -   **CMS Integration:**  The Next.js app is designed to interact with the Strapi CMS.  Currently, the CMS is set up but not actively used in the frontend.
 - **Dashboard:** The dashboard page (`app/dashboard/page.tsx`) retrieves the user session using `getServerSession`. If no session is found, it redirects to the home page. If a session exists, it displays the user's email.
+- **Navigation Bar**: A responsive Navbar component (components/Navbar.tsx) is implemented, centered on the page, with links to Home, About, Services, Portfolio, Contact, and Login pages. It uses Tailwind CSS for styling and includes a mobile toggle menu.
+- **Pages**: The app includes 6 pages (Home, About, Services, Portfolio, Contact, and Login), all accessible via the navigation bar. The Login page uses a CSS module for styling, while other pages rely on inline styles or Tailwind classes for basic layout.
 
 ## Dashboard Features
 
