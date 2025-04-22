@@ -12,6 +12,7 @@ export default function AuthForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"error" | "success">("error");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,6 +34,7 @@ export default function AuthForm() {
 
         if (res.data && res.data.jwt) {
           setMessage("User registered successfully! Please sign in.");
+          setMessageType("success");
           setIsSignUp(false);
         }
       } else {
@@ -45,6 +47,7 @@ export default function AuthForm() {
 
         if (res?.error) {
           setMessage(res.error);
+          setMessageType("error");
         } else {
           router.push("/dashboard");
         }
@@ -64,6 +67,7 @@ export default function AuthForm() {
       } else {
         setMessage(isSignUp ? "Registration failed" : "Sign in failed");
       }
+      setMessageType("error");
     } finally {
       setIsLoading(false);
     }
@@ -71,63 +75,114 @@ export default function AuthForm() {
 
   return (
     <div style={{ 
-      maxWidth: "400px", 
+      maxWidth: "420px", 
       margin: "40px auto", 
-      padding: "20px", 
+      padding: "25px 30px", 
       backgroundColor: "white", 
       borderRadius: "8px",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)" 
+      boxShadow: "0 2px 10px rgba(0,0,0,0.05)" 
     }}>
-      <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>
-        {isSignUp ? "Sign Up" : "Sign In"}
+      <h1 style={{ 
+        fontSize: "24px", 
+        marginBottom: "12px", 
+        textAlign: "center",
+        fontWeight: "600",
+        color: "#111827"
+      }}>
+        {isSignUp ? "Create an Account" : "Welcome Back"}
       </h1>
       
+      <p style={{ 
+        marginBottom: "20px", 
+        textAlign: "center", 
+        color: "#6B7280",
+        fontSize: "14px"
+      }}>
+        {isSignUp ? "Fill in your details to get started" : "Enter your credentials to access your account"}
+      </p>
+      
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", marginBottom: "5px" }}>Email</label>
+        <div style={{ marginBottom: "16px" }}>
+          <label style={{ 
+            display: "block", 
+            marginBottom: "8px",
+            fontSize: "14px",
+            fontWeight: "normal",
+            color: "#374151"
+          }}>
+            Email
+          </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{ 
-              width: "100%", 
-              padding: "8px", 
-              border: "1px solid #ccc", 
-              borderRadius: "4px" 
+              width: "94%", 
+              padding: "8px 10px", 
+              border: "1px solid #E5E7EB", 
+              borderRadius: "6px",
+              fontSize: "14px",
+              height: "36px",
+              outline: "none",
+              backgroundColor: "#EFF6FF"
             }}
           />
         </div>
         
         {isSignUp && (
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ display: "block", marginBottom: "5px" }}>Username (optional)</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ 
+              display: "block", 
+              marginBottom: "8px",
+              fontSize: "14px",
+              fontWeight: "normal",
+              color: "#374151"
+            }}>
+              Username <span style={{ color: "#9CA3AF" }}>(optional)</span>
+            </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               style={{ 
-                width: "100%", 
-                padding: "8px", 
-                border: "1px solid #ccc", 
-                borderRadius: "4px" 
+                width: "94%", 
+                padding: "8px 10px", 
+                border: "1px solid #E5E7EB", 
+                borderRadius: "6px",
+                fontSize: "14px",
+                height: "36px",
+                outline: "none",
+                backgroundColor: "white"
               }}
             />
           </div>
         )}
         
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", marginBottom: "5px" }}>Password</label>
+        <div style={{ marginBottom: "20px" }}>
+          <label style={{ 
+            display: "block", 
+            marginBottom: "8px",
+            fontSize: "14px",
+            fontWeight: "normal",
+            color: "#374151"
+          }}>
+            Password
+          </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             style={{ 
-              width: "100%", 
-              padding: "8px", 
-              border: "1px solid #ccc", 
-              borderRadius: "4px" 
+              width: "94%", 
+              padding: "8px 10px", 
+              border: "1px solid #E5E7EB", 
+              borderRadius: "6px",
+              fontSize: "14px",
+              height: "36px",
+              outline: "none",
+              backgroundColor: "#EFF6FF"
             }}
           />
         </div>
@@ -137,39 +192,48 @@ export default function AuthForm() {
           disabled={isLoading}
           style={{ 
             width: "100%", 
-            padding: "10px", 
-            backgroundColor: "#3b82f6", 
+            padding: "8px 10px", 
+            backgroundColor: "#3B82F6", 
             color: "white", 
             border: "none", 
-            borderRadius: "4px", 
-            cursor: "pointer" 
+            borderRadius: "6px", 
+            cursor: isLoading ? "wait" : "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            height: "36px",
+            marginTop: "5px"
           }}
         >
-          {isLoading ? "Processing..." : isSignUp ? "Sign Up" : "Sign In"}
+          {isLoading ? "Processing..." : (isSignUp ? "Sign Up" : "Sign In")}
         </button>
       </form>
       
       {message && (
         <div style={{ 
-          marginTop: "15px", 
+          marginTop: "16px", 
           padding: "10px", 
-          backgroundColor: "#f8d7da", 
-          borderRadius: "4px", 
-          color: "#721c24",
-          textAlign: "center" 
+          backgroundColor: messageType === "error" ? "#FEF2F2" : "#F0FDF4", 
+          borderRadius: "6px", 
+          color: messageType === "error" ? "#991B1B" : "#166534",
+          fontSize: "13px"
         }}>
           {message}
         </div>
       )}
       
-      <div style={{ marginTop: "15px", textAlign: "center" }}>
+      <div style={{ 
+        marginTop: "16px", 
+        textAlign: "center",
+        fontSize: "14px"
+      }}>
         <button
           onClick={() => setIsSignUp(!isSignUp)}
           style={{ 
             background: "none", 
             border: "none", 
-            color: "#3b82f6", 
-            cursor: "pointer" 
+            color: "#3B82F6", 
+            cursor: "pointer",
+            fontSize: "14px"
           }}
         >
           {isSignUp

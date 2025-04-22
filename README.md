@@ -69,5 +69,35 @@ Make sure to populate the `.env` files in both `nextjs-app` and `nextjs-app/cms`
 -   **CMS Integration:**  The Next.js app is designed to interact with the Strapi CMS.  Currently, the CMS is set up but not actively used in the frontend.
 - **Dashboard:** The dashboard page (`app/dashboard/page.tsx`) retrieves the user session using `getServerSession`. If no session is found, it redirects to the home page. If a session exists, it displays the user's email.
 
+## Dashboard Features
+
+The dashboard section allows users to have a tailored experience with multiple primary features such as:
+
+- **User Profile Information**: Shows this information for the currently logged-in user's profile, including their username and email address.
+- **Weather Widget**: Displays current weather information for Toronto such as temperature, conditions, humidity, and wind speed.
+- **Data Visualization**: Includes an activity overview chart showing user activities for the past week graphically.
+- **Task Management**: Provides functionality for users to create, manage, and organize tasks at different priority levels.
+- **Theme Customization**: Comes with the ability to change the dashboard to light, dark, or blue colors.
+- **Profile Management**: Allows users to edit their profile information, including username and password modifications.
+
+### Task Management
+
+Using the task management system, users will be able to:
+- Add new tasks with different levels of priority assigned, including low, medium, and high.
+- Toggle complete and incomplete statuses on tasks
+- Remove tasks that are not useful anymore.
+- Use different colors to mark different levels of priority/importance for better visibility.
+
+Data pertaining to these tasks are kept in the localStorage of the browser, which means users will still be able to access their data even after closing the application, and do not need an internet connection to a server.
+
+### Theme Settings
+
+Users can customize their dashboard experience by choosing one of the following three theme options:
+- Light theme: The background is sharp white, whereas the text is written in dark.
+- Dark theme: Dark background for the text is light to reduce strain on the eyes.
+- Blue theme: The background is blue, whereas the text color is navy.
+
+Theme preferences are stored in localStorage, so the selected theme is retained between sessions.
+
 ## Deployment
 The application can be deployed to Vercel. The CMS can be deployed to a hosting provider that supports Node.js applications (e.g., Heroku, DigitalOcean). You will need to configure the environment variables on your hosting platforms.
